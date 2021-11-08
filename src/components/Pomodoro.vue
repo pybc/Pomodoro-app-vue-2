@@ -3,12 +3,12 @@
     <h1>Pomodoro</h1>
     <section>
       <div class="timer">
-        {{ isTime }}
+        {{ isHour.toString().length === 1 ? "0" + isHour : isHour }}:{{ isSec.toString().length === 1 ? "0" + isSec : isSec }}
       </div>
     </section>
     <section class="button-pomodoro">
-      <button @click="handleCountdown">start</button>
-      <button>stop</button>
+      <button @click="handleStartCountdown">start</button>
+      <button @click="handleStopCountdown">stop</button>
     </section>
     <section>
       <h2>Todolist</h2>
@@ -44,26 +44,51 @@ export default {
   name: "Pomodoro",
   data() {
     return {
-      time: 10,
+      hour: 0,
+      sec: 3,
+      isCountdown: false,
     };
   },
   props: {
     msg: String,
   },
+
   computed: {
-    isTime() {
-      return this.time;
+    isSec() {
+      return this.sec;
+    },
+    isHour() {
+      return this.hour;
     },
   },
   created() {
     this.initialPage();
   },
   methods: {
-    initialPage() {
-     
+    initialPage() {},
+    async handleStartCountdown() {
+      this.isCountdown = true;
+      while (this.sec > 0 && this.isCountdown) {
+        this.sec--;
+        console.log(this.sec, "sec");
+        console.log("this.isCountdown", this.isCountdown);
+        await this.sleep(1000);
+      }
+      if (this.hour>0 && this.sec === 0) {
+        this.hour--;
+        this.sec = 60;
+        this.handleStartCountdown();
+      }
+
+        this.handleStopCountdown();
+      
+      
     },
-    handleCountdown() {
-         this.time -= 1;
+    handleStopCountdown() {
+      this.isCountdown = false;
+    },
+    sleep(ms) {
+      return new Promise((result) => setTimeout(result, ms));
     },
   },
 };
