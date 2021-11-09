@@ -3,12 +3,30 @@
     <h1>Pomodoro</h1>
     <section>
       <div class="timer">
-        {{ isHour.toString().length === 1 ? "0" + isHour : isHour }}:{{ isSec.toString().length === 1 ? "0" + isSec : isSec }}
+        {{ isHour.toString().length === 1 ? "0" + isHour : isHour }}:{{
+          isSec.toString().length === 1 ? "0" + isSec : isSec
+        }}
       </div>
     </section>
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
       <button @click="handleStopCountdown">stop</button>
+      <button @click="settingShow = !settingShow">Setting</button>
+    </section>
+    <section>
+      <b-modal v-model="settingShow">
+        <b-row>
+          <b-col class="col-6">
+            <label for="hourInput">Hour:</label>
+         <b-form-input id="hourInput" v-model="defaultHour" type="number" :state="stateHour"  placeholder="Enter your name"></b-form-input>
+        </b-col>
+        <b-col class="col-6">
+          <label for="secInput">Sec:</label>
+          <b-form-input id="secInput" v-model="defaultSec" type="number" :state="stateSec"  placeholder="Enter your name"></b-form-input>
+        </b-col>
+        </b-row>
+  
+      </b-modal>
     </section>
     <section>
       <h2>Todolist</h2>
@@ -44,6 +62,10 @@ export default {
   name: "Pomodoro",
   data() {
     return {
+      defaultTime: 0,
+      defaultSec: 0,
+      defaultHour: 0,
+      settingShow: false,
       hour: 0,
       sec: 3,
       isCountdown: false,
@@ -54,6 +76,12 @@ export default {
   },
 
   computed: {
+    stateSec(){
+      return this.handleSettingTimer(this.defaultSec.length);
+    },
+    stateHour(){
+      return this.handleSettingTimer(this.defaultHour.length);
+    },
     isSec() {
       return this.sec;
     },
@@ -74,15 +102,12 @@ export default {
         console.log("this.isCountdown", this.isCountdown);
         await this.sleep(1000);
       }
-      if (this.hour>0 && this.sec === 0) {
+      if (this.hour > 0 && this.sec === 0) {
         this.hour--;
         this.sec = 60;
         this.handleStartCountdown();
       }
-
-        this.handleStopCountdown();
-      
-      
+      this.handleStopCountdown();
     },
     handleStopCountdown() {
       this.isCountdown = false;
@@ -90,6 +115,13 @@ export default {
     sleep(ms) {
       return new Promise((result) => setTimeout(result, ms));
     },
+    showModalSetting() {
+      console.log(this.settingShow, "this.settingShow");
+      this.settingShow != this.settingShow;
+    },
+    handleSettingTimer(time){
+      return (time > 0 && time <= 2 ? true : false)
+    }
   },
 };
 </script>
