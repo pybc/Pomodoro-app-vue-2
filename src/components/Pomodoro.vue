@@ -14,18 +14,29 @@
       <button @click="settingShow = !settingShow">Setting</button>
     </section>
     <section>
-      <b-modal v-model="settingShow">
+      <b-modal v-model="settingShow" @ok="setTime">
         <b-row>
           <b-col class="col-6">
             <label for="hourInput">Hour:</label>
-         <b-form-input id="hourInput" v-model="defaultHour" type="number" :state="stateHour"  placeholder="Enter your name"></b-form-input>
-        </b-col>
-        <b-col class="col-6">
-          <label for="secInput">Sec:</label>
-          <b-form-input id="secInput" v-model="defaultSec" type="number" :state="stateSec"  placeholder="Enter your name"></b-form-input>
-        </b-col>
+            <b-form-input
+              id="hourInput"
+              v-model="defaultHour"
+              type="number"
+              @keypress="handleSettingHour"
+              placeholder="Enter your name"
+            ></b-form-input>
+          </b-col>
+          <b-col class="col-6">
+            <label for="secInput">Sec:</label>
+            <b-form-input
+              id="secInput"
+              v-model="defaultSec"
+              type="number"
+              @keypress="handleSettingSec"
+              placeholder="Enter your name"
+            ></b-form-input>
+          </b-col>
         </b-row>
-  
       </b-modal>
     </section>
     <section>
@@ -58,6 +69,7 @@
 </template>
 
 <script>
+const REGEX_NUMBER = /^[0-9]*$/;
 export default {
   name: "Pomodoro",
   data() {
@@ -76,12 +88,6 @@ export default {
   },
 
   computed: {
-    stateSec(){
-      return this.handleSettingTimer(this.defaultSec.length);
-    },
-    stateHour(){
-      return this.handleSettingTimer(this.defaultHour.length);
-    },
     isSec() {
       return this.sec;
     },
@@ -119,9 +125,20 @@ export default {
       console.log(this.settingShow, "this.settingShow");
       this.settingShow != this.settingShow;
     },
-    handleSettingTimer(time){
-      return (time > 0 && time <= 2 ? true : false)
-    }
+    handleSettingSec(event) {
+      if (!REGEX_NUMBER.test(this.defaultSec) || this.defaultSec.length >= 2) {
+        return event.preventDefault();
+      }
+    },
+    handleSettingHour(event) {
+      if (!REGEX_NUMBER.test(this.defaultHour)|| this.defaultHour.length >= 2) {
+        return event.preventDefault();
+      }
+    },
+    setTime() {
+      this.hour = this.defaultHour;
+      this.sec = this.defaultSec;
+    },
   },
 };
 </script>
