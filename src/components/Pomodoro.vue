@@ -1,12 +1,10 @@
 <template>
   <div class="hello">
     <h1>Pomodoro</h1>
-    <section>
-      <div class="timer">
-        {{ isHour.toString().length === 1 ? "0" + isHour : isHour }}:{{
-          isSec.toString().length === 1 ? "0" + isSec : isSec
-        }}
-      </div>
+    <section class="timer">
+      <div v-if="mode === 0">{{ isPoromodoHour }}:{{ isPoromodoSec }}</div>
+      <div v-if="mode === 1">{{ isShortBreakHour }}:{{ isShortBreakSec }}</div>
+      <div v-if="mode === 2">{{ isLongBreakHour }}:{{ isLongBreakSec }}</div>
     </section>
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
@@ -16,24 +14,31 @@
     <section>
       <b-modal v-model="settingShow" @ok="setTime">
         <b-row>
-          <b-col class="col-6">
-            <label for="hourInput">Hour:</label>
+          <b-col class="col-4">
+            <label for="hourInput">Pomodoro</label>
             <b-form-input
               id="hourInput"
-              v-model="defaultHour"
+              v-model="setter.pomodoroHour"
               type="number"
-              @keypress="handleSettingHour"
-              placeholder="Enter your name"
+              @keypress="handleSettingHour($event, setter.pomodoroHour)"
             ></b-form-input>
           </b-col>
-          <b-col class="col-6">
-            <label for="secInput">Sec:</label>
+          <b-col class="col-4">
+            <label for="secInput">Short Break</label>
             <b-form-input
               id="secInput"
-              v-model="defaultSec"
+              v-model="setter.shortBreakHour"
               type="number"
-              @keypress="handleSettingSec"
-              placeholder="Enter your name"
+              @keypress="handleSettingHour($event, setter.shortBreakHour)"
+            ></b-form-input>
+          </b-col>
+          <b-col class="col-4">
+            <label for="secInput">Long Break</label>
+            <b-form-input
+              id="secInput"
+              v-model="setter.longBreakHour"
+              type="number"
+              @keypress="handleSettingHour($event, setter.longBreakHour)"
             ></b-form-input>
           </b-col>
         </b-row>
@@ -43,15 +48,6 @@
       <h2>Todolist</h2>
     </section>
     <section class="list">
-      <div>
-        <input type="text" />
-      </div>
-      <div>
-        <input type="text" />
-      </div>
-      <div>
-        <input type="text" />
-      </div>
       <div>
         <input type="text" />
       </div>
@@ -74,13 +70,29 @@ export default {
   name: "Pomodoro",
   data() {
     return {
-      defaultTime: 0,
-      defaultSec: 0,
-      defaultHour: 0,
+      setter: {
+        pomodoroHour: 0,
+        pomodoroSec: 0,
+        shortBreakHour: 0,
+        shortBreakSec: 0,
+        longBreakHour: 0,
+        longBreakSec: 0,
+      },
       settingShow: false,
-      hour: 0,
-      sec: 3,
+      pomodoro: {
+        hour: 0,
+        sec: 3,
+      },
+      shortBreak: {
+        hour: 0,
+        sec: 3,
+      },
+      longBreak: {
+        hour: 0,
+        sec: 3,
+      },
       isCountdown: false,
+      mode: 0,
     };
   },
   props: {
@@ -88,11 +100,23 @@ export default {
   },
 
   computed: {
-    isSec() {
-      return this.sec;
+    isPoromodoHour() {
+      return this.displayTimeFormat(this.pomodoro.hour);
     },
-    isHour() {
-      return this.hour;
+    isPoromodoSec() {
+      return this.displayTimeFormat(this.pomodoro.sec);
+    },
+    isShortBreakHour() {
+      return this.displayTimeFormat(this.shortBreak.hour);
+    },
+    isShortBreakSec() {
+      return this.displayTimeFormat(this.shortBreak.sec);
+    },
+    isLongBreakHour() {
+      return this.displayTimeFormat(this.longBreak.hour);
+    },
+    isLongBreakSec() {
+      return this.displayTimeFormat(this.longBreak.sec);
     },
   },
   created() {
@@ -125,20 +149,24 @@ export default {
       console.log(this.settingShow, "this.settingShow");
       this.settingShow != this.settingShow;
     },
-    handleSettingSec(event) {
-      if (!REGEX_NUMBER.test(this.defaultSec) || this.defaultSec.length >= 2) {
-        return event.preventDefault();
-      }
-    },
-    handleSettingHour(event) {
-      if (!REGEX_NUMBER.test(this.defaultHour)|| this.defaultHour.length >= 2) {
+    handleSettingHour(event, time) {
+      if (!REGEX_NUMBER.test(time)) {
         return event.preventDefault();
       }
     },
     setTime() {
-      this.hour = this.defaultHour;
-      this.sec = this.defaultSec;
+      this.poromodo.hour = this.setter.pomodoroHour;
+      this.poromodo.sec = this.setter.pomodoroSec;
+      this.shortBreak.hour = this.setter.shortBreakHour;
+      this.shortBreak.sec = this.setter.shortBreakSec;
+      this.longBreak.hour = this.setter.longBreakHour;
+      this.longBreak.sec = this.setter.longBreakSec;
     },
+
+    displayTimeFormat(time) {
+      return time.toString().length === 1 ? "0" + time : time;
+    },
+
   },
 };
 </script>
