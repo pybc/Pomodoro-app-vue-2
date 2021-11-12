@@ -6,7 +6,7 @@
 
 <script>
 // @ is an alias to /src
-import Pomodoro from "@/components/Pomodoro.vue";
+import Pomodoro from "@/components/common/Pomodoro.vue";
 
 export default {
   name: "Home",
@@ -16,8 +16,5 @@ export default {
 };
 </script>
 <style scoped>
-.home{
-    background-color:#151b29;
-    height: 100%;
-}
+
 </style>
