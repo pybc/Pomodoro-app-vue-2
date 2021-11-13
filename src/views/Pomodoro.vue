@@ -11,6 +11,7 @@
       <div v-else-if="mode === 'LONG_BREAK'">
         {{ isLongBreakHour }}:{{ isLongBreakSec }}
       </div>
+      <button id="nextHour" @click="handleNextHour">></button>
     </section>
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
@@ -169,6 +170,13 @@ export default {
     onCard(value) {
       this.text = value;
     },
+    handleNextHour() {
+      this.mode === "POMODORO"
+        ? this.pomodoro.hour++
+        : this.mode === "SHORT_BREAK"
+        ? this.shortBreak.hour++
+        : this.longBreak.hour++;
+    },
   },
 };
 </script>
@@ -192,7 +200,7 @@ section {
   display: flex;
   justify-content: space-evenly;
 }
-section button {
+.button-pomodoro button {
   background: none;
   color: #ffa260;
   border: 2px solid;
@@ -201,7 +209,7 @@ section button {
   transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
 }
 
-section button:hover {
+.button-pomodoro button:hover {
   border-color: #f1ff5c;
   color: white;
   box-shadow: 0 0.5em 0.5em -0.4em #f1ff5c;
@@ -220,5 +228,8 @@ section button:hover {
 }
 .list input {
   width: 20em;
+}
+#btnNextHour {
+  height: 1em;
 }
 </style>
