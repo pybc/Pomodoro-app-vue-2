@@ -55,7 +55,12 @@
       <h2>Todolist</h2>
     </section>
     <section class="list">
-      <card :text="text" @onClick="onCard"></card>
+      <card
+        v-for="data in dataCard"
+        :key="data.index"
+        :text="data.text"
+        @onClick="onCard"
+      ></card>
     </section>
   </div>
 </template>
@@ -94,6 +99,7 @@ export default {
       isCountdown: false,
       mode: "POMODORO",
       text: "asdasd",
+      dataCard: [],
     };
   },
   props: {
@@ -124,7 +130,15 @@ export default {
     this.initialPage();
   },
   methods: {
-    initialPage() {},
+    initialPage() {
+      for (let index = 0; index < 6; index++) {
+        this.dataCard.push({
+          index: index,
+          text: "awdawdss",
+        });
+        console.log(this.dataCard[index], "this.dataCard[index]");
+      }
+    },
     async handleStartCountdown() {
       this.isCountdown = true;
       while (this.sec > 0 && this.isCountdown) {
