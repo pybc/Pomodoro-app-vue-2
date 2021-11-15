@@ -3,15 +3,15 @@
     <h1>Pomodoro</h1>
     <section class="timer container">
       <div v-if="mode === 'POMODORO'">
-        {{ isPoromodoHour }}:{{ isPoromodoSec }}
+        {{ isPoromodoMin }}:{{ isPoromodoSec }}
       </div>
       <div v-else-if="mode === 'SHORT_BREAK'">
-        {{ isShortBreakHour }}:{{ isShortBreakSec }}
+        {{ isShortBreakMin }}:{{ isShortBreakSec }}
       </div>
       <div v-else-if="mode === 'LONG_BREAK'">
-        {{ isLongBreakHour }}:{{ isLongBreakSec }}
+        {{ isLongBreakMin }}:{{ isLongBreakSec }}
       </div>
-      <button id="nextHour" @click="handleNextHour">></button>
+      <button id="nextMin" @click="handleNextMin">></button>
     </section>
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
@@ -19,34 +19,39 @@
       <button @click="settingShow = !settingShow">Setting</button>
     </section>
     <section>
-      <b-modal v-model="settingShow" @ok="setTime">
+      <b-modal v-model="settingShow" hide-footer class="px-1">
         <b-row>
           <b-col class="col-4">
-            <label for="hourInput">Pomodoro</label>
+            <label for="minInput">Pomodoro</label>
             <b-form-input
-              id="hourInput"
-              v-model="setter.pomodoroHour"
+              id="minInput"
+              v-model="setter.pomodoroMin"
               type="number"
-              @keypress="handleSettingHour($event, setter.pomodoroHour)"
+              @keypress="handleSettingMin($event, setter.pomodoroMin)"
             ></b-form-input>
           </b-col>
           <b-col class="col-4">
             <label for="secInput">Short Break</label>
             <b-form-input
               id="secInput"
-              v-model="setter.shortBreakHour"
+              v-model="setter.shortBreakMin"
               type="number"
-              @keypress="handleSettingHour($event, setter.shortBreakHour)"
+              @keypress="handleSettingMin($event, setter.shortBreakMin)"
             ></b-form-input>
           </b-col>
           <b-col class="col-4">
             <label for="secInput">Long Break</label>
             <b-form-input
               id="secInput"
-              v-model="setter.longBreakHour"
+              v-model="setter.longBreakMin"
               type="number"
-              @keypress="handleSettingHour($event, setter.longBreakHour)"
+              @keypress="handleSettingMin($event, setter.longBreakMin)"
             ></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col class="text-center">
+            <button @click="setTime">ok</button>
           </b-col>
         </b-row>
       </b-modal>
@@ -59,6 +64,8 @@
         v-for="data in dataCard"
         :key="data.index"
         :text="data.text"
+        :index="data.index"
+        @onDelete="onDelete"
         @onClick="onCard"
       ></card>
     </section>
@@ -76,24 +83,21 @@ export default {
   data() {
     return {
       setter: {
-        pomodoroHour: 0,
-        pomodoroSec: 0,
-        shortBreakHour: 0,
-        shortBreakSec: 0,
-        longBreakHour: 0,
-        longBreakSec: 0,
+        pomodoroMin: 0,
+        shortBreakMin: 0,
+        longBreakMin: 0,
       },
       settingShow: false,
       pomodoro: {
-        hour: 0,
+        min: 0,
         sec: 1,
       },
       shortBreak: {
-        hour: 0,
+        min: 0,
         sec: 2,
       },
       longBreak: {
-        hour: 0,
+        min: 0,
         sec: 3,
       },
       isCountdown: false,
@@ -107,20 +111,20 @@ export default {
   },
 
   computed: {
-    isPoromodoHour() {
-      return this.displayTimeFormat(this.pomodoro.hour);
+    isPoromodoMin() {
+      return this.displayTimeFormat(this.pomodoro.min);
     },
     isPoromodoSec() {
       return this.displayTimeFormat(this.pomodoro.sec);
     },
-    isShortBreakHour() {
-      return this.displayTimeFormat(this.shortBreak.hour);
+    isShortBreakMin() {
+      return this.displayTimeFormat(this.shortBreak.min);
     },
     isShortBreakSec() {
       return this.displayTimeFormat(this.shortBreak.sec);
     },
-    isLongBreakHour() {
-      return this.displayTimeFormat(this.longBreak.hour);
+    isLongBreakMin() {
+      return this.displayTimeFormat(this.longBreak.min);
     },
     isLongBreakSec() {
       return this.displayTimeFormat(this.longBreak.sec);
@@ -147,8 +151,8 @@ export default {
         console.log("this.isCountdown", this.isCountdown);
         await this.sleep(1000);
       }
-      if (this.hour > 0 && this.sec === 0) {
-        this.hour--;
+      if (this.min > 0 && this.sec === 0) {
+        this.min--;
         this.sec = 60;
         this.handleStartCountdown();
       }
@@ -164,18 +168,22 @@ export default {
       console.log(this.settingShow, "this.settingShow");
       this.settingShow != this.settingShow;
     },
-    handleSettingHour(event, time) {
+    handleSettingMin(event, time) {
       if (!REGEX_NUMBER.test(time)) {
+        console.log("time:", time);
+        this.mode === "POMODORO"
+          ? (this.pomodoro.min = time)
+          : this.mode === "SHORT_BREAK"
+          ? (this.shortBreak.min = time)
+          : (this.longBreak.min = time);
         return event.preventDefault();
       }
     },
     setTime() {
-      this.poromodo.hour = this.setter.pomodoroHour;
-      this.poromodo.sec = this.setter.pomodoroSec;
-      this.shortBreak.hour = this.setter.shortBreakHour;
-      this.shortBreak.sec = this.setter.shortBreakSec;
-      this.longBreak.hour = this.setter.longBreakHour;
-      this.longBreak.sec = this.setter.longBreakSec;
+      console.log(this.setter.pomodoroMin);
+      this.poromodo.min = this.setter.pomodoroMin || 0;
+      this.shortBreak.min = this.setter.shortBreakMin || 0;
+      this.longBreak.min = this.setter.longBreakMin || 0;
     },
 
     displayTimeFormat(time) {
@@ -184,12 +192,15 @@ export default {
     onCard(value) {
       this.text = value;
     },
-    handleNextHour() {
+    onDelete(index) {
+      this.dataCard.splice(index, 1);
+    },
+    handleNextMin() {
       this.mode === "POMODORO"
-        ? this.pomodoro.hour++
+        ? this.pomodoro.min++
         : this.mode === "SHORT_BREAK"
-        ? this.shortBreak.hour++
-        : this.longBreak.hour++;
+        ? this.shortBreak.min++
+        : this.longBreak.min++;
     },
   },
 };
@@ -243,7 +254,7 @@ section {
 .list input {
   width: 20em;
 }
-#btnNextHour {
+#btnNextMin {
   height: 1em;
 }
 </style>

@@ -4,8 +4,9 @@
       <input v-model="textCard" type="text" />
     </span>
     <span v-else>
-        {{textCard}}
+      {{ textCard }}
     </span>
+    <span><button @click="handleDeleteButton">delete</button></span>
     <span><button @click="handleEditButton">edit</button></span>
   </section>
 </template>
@@ -20,13 +21,16 @@ export default {
       value: "",
     };
   },
-  props: ["text"],
+  props: ["text", "index"],
   created() {
     this.initData();
   },
   methods: {
     initData() {
-      this.textCard = this.text
+      this.textCard = this.text;
+    },
+    handleDeleteButton() {
+      this.$emit("onDelete", this.index);
     },
     handleEditButton() {
       this.$emit("onClick", this.textCard);
