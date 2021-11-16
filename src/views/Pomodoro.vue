@@ -165,6 +165,10 @@ export default {
       return new Promise((result) => setTimeout(result, ms));
     },
     showModalSetting() {
+      this.setter.pomodoroMin = 0;
+      this.setter.shortBreakMin = 0;
+      this.setter.longBreakMin = 0;
+
       console.log(this.settingShow, "this.settingShow");
       this.settingShow != this.settingShow;
     },
@@ -180,8 +184,7 @@ export default {
       }
     },
     setTime() {
-      console.log(this.setter.pomodoroMin);
-      this.poromodo.min = this.setter.pomodoroMin || 0;
+      this.pomodoro.min = this.setter.pomodoroMin || 0;
       this.shortBreak.min = this.setter.shortBreakMin || 0;
       this.longBreak.min = this.setter.longBreakMin || 0;
     },
