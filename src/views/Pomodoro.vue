@@ -145,15 +145,15 @@ export default {
     },
     async handleStartCountdown() {
       this.isCountdown = true;
-      while (this.sec > 0 && this.isCountdown) {
-        this.sec--;
-        console.log(this.sec, "sec");
+      while (this.pomodoro.sec > 0 && this.isCountdown) {
+        this.pomodoro.sec--;
+        console.log(this.pomodoro.sec, "sec");
         console.log("this.isCountdown", this.isCountdown);
         await this.sleep(1000);
       }
-      if (this.min > 0 && this.sec === 0) {
-        this.min--;
-        this.sec = 60;
+      if (this.pomodoro.min > 0 && this.pomodoro.sec === 0) {
+        this.pomodoro.min--;
+        this.pomodoro.sec = 60;
         this.handleStartCountdown();
       }
       this.handleStopCountdown();
