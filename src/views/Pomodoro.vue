@@ -144,19 +144,21 @@ export default {
       }
     },
     async handleStartCountdown() {
-      this.isCountdown = true;
-      while (this.pomodoro.sec > 0 && this.isCountdown) {
-        this.pomodoro.sec--;
-        console.log(this.pomodoro.sec, "sec");
-        console.log("this.isCountdown", this.isCountdown);
-        await this.sleep(1000);
+      if (!this.isCountdown) {
+        this.isCountdown = true;
+        while (this.pomodoro.sec > 0 && this.isCountdown) {
+          this.pomodoro.sec--;
+          console.log(this.pomodoro.sec, "sec");
+          console.log("this.isCountdown", this.isCountdown);
+          await this.sleep(1000);
+        }
+        if (this.pomodoro.min > 0 && this.pomodoro.sec === 0) {
+          this.pomodoro.min--;
+          this.pomodoro.sec = 59;
+          this.handleStartCountdown();
+        }
+        this.handleStopCountdown();
       }
-      if (this.pomodoro.min > 0 && this.pomodoro.sec === 0) {
-        this.pomodoro.min--;
-        this.pomodoro.sec = 60;
-        this.handleStartCountdown();
-      }
-      this.handleStopCountdown();
     },
     handleStopCountdown() {
       this.isCountdown = false;
