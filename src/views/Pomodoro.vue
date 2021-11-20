@@ -16,10 +16,10 @@
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
       <button @click="handleStopCountdown">stop</button>
-      <button @click="settingShow = !settingShow">Setting</button>
+      <button @click="isSettingModal = !isSettingModal">Setting</button>
     </section>
     <section>
-      <b-modal v-model="settingShow" hide-footer class="px-1">
+      <b-modal v-model="isSettingModal" hide-footer class="px-1">
         <b-row>
           <b-col class="col-4">
             <label for="minInput">Pomodoro</label>
@@ -92,7 +92,7 @@ export default {
         shortBreakMin: 0,
         longBreakMin: 0,
       },
-      settingShow: false,
+      isSettingModal: false,
       pomodoro: {
         min: 0,
         sec: 1,
@@ -143,18 +143,20 @@ export default {
     async handleStartCountdown() {
       if (!this.isCountdown) {
         this.isCountdown = true;
-        while (this.pomodoro.sec > 0 && this.isCountdown) {
-          this.pomodoro.sec--;
-          console.log(this.pomodoro.sec, "sec");
-          console.log("this.isCountdown", this.isCountdown);
-          await this.sleep(1000);
+        while (this.pomodoro.min >= 0 && this.isCountdown) {
+          while (this.pomodoro.sec > 0 && this.isCountdown) {
+            this.pomodoro.sec--;
+            console.log(this.pomodoro.sec, "sec");
+            console.log("this.isCountdown", this.isCountdown);
+            await this.sleep(1000);
+          }
+          if (this.pomodoro.min > 0 && this.isCountdown) {
+            this.pomodoro.min--;
+            this.pomodoro.sec = 60;
+          } else {
+            this.handleStopCountdown();
+          }
         }
-        if (this.pomodoro.min > 0 && this.pomodoro.sec === 0) {
-          this.pomodoro.min--;
-          this.pomodoro.sec = 59;
-          this.handleStartCountdown();
-        }
-        this.handleStopCountdown();
       }
     },
     handleStopCountdown() {
@@ -167,12 +169,9 @@ export default {
       this.setter.pomodoroMin = 0;
       this.setter.shortBreakMin = 0;
       this.setter.longBreakMin = 0;
-      this.pomodoro.sec = 0;
-      this.pomodoro.sec = 0;
-      this.pomodoro.sec = 0;
 
-      console.log(this.settingShow, "this.settingShow");
-      this.settingShow != this.settingShow;
+      console.log(this.isSettingModal, "this.settingShow");
+      this.isSettingModal != this.settinisSettingModalgShow;
     },
     handleSettingMin(event, time) {
       if (!REGEX_NUMBER.test(time)) {
@@ -189,6 +188,8 @@ export default {
       this.pomodoro.min = this.setter.pomodoroMin || 0;
       this.shortBreak.min = this.setter.shortBreakMin || 0;
       this.longBreak.min = this.setter.longBreakMin || 0;
+      this.pomodoro.sec = 0;
+      this.isSettingModal = false;
     },
 
     displayTimeFormat(time) {
