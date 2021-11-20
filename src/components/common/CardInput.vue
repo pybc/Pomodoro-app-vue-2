@@ -1,13 +1,9 @@
 <template>
   <section id="text" class="d-flex flex-row">
-    <span v-if="isEdit === true">
-      <input v-model="textCard" type="text" />
+    <span>
+      <input @keyup.enter="handleAddButton" v-model="textCard" type="text" />
     </span>
-    <span v-else>
-      {{ textCard }}
-    </span>
-    <span><button @click="handleDeleteButton">delete</button></span>
-    <span><button @click="handleEditButton">edit</button></span>
+    <span><button @click="handleAddButton">Add</button></span>
   </section>
 </template>
 
@@ -16,12 +12,9 @@ export default {
   name: "Card",
   data() {
     return {
-      isEdit: false,
       textCard: "",
-      value: "",
     };
   },
-  props: ["text", "uid"],
   created() {
     this.initData();
   },
@@ -29,12 +22,9 @@ export default {
     initData() {
       this.textCard = this.text;
     },
-    handleDeleteButton() {
-      this.$emit("onDelete", this.uid);
-    },
-    handleEditButton() {
-      this.$emit("onClick", this.textCard);
-      this.isEdit = !this.isEdit;
+    handleAddButton() {
+      this.$emit("onAddCard", this.textCard);
+      this.textCard = "";
     },
   },
 };

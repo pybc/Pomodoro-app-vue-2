@@ -61,13 +61,14 @@
     </section>
     <section class="list">
       <card
-        v-for="data in dataCard"
-        :key="data.index"
+        v-for="data in cardData"
+        :key="data.uid"
         :text="data.text"
-        :index="data.index"
+        :uid="data.uid"
         @onDelete="onDelete"
         @onClick="onCard"
       ></card>
+      <card-input @onAddCard="handleAddCard"> </card-input>
     </section>
   </div>
 </template>
@@ -75,10 +76,14 @@
 <script>
 const REGEX_NUMBER = /^[0-9]*$/;
 import Card from "@/components/common/Card.vue";
+import CardInput from "@/components/common/CardInput.vue";
+import { uuid } from "vue-uuid";
+
 export default {
   name: "Pomodoro",
   components: {
     Card,
+    CardInput,
   },
   data() {
     return {
@@ -102,8 +107,8 @@ export default {
       },
       isCountdown: false,
       mode: "POMODORO",
-      text: "asdasd",
-      dataCard: [],
+      text: "",
+      cardData: [],
     };
   },
   props: {
@@ -134,15 +139,7 @@ export default {
     this.initialPage();
   },
   methods: {
-    initialPage() {
-      for (let index = 0; index < 6; index++) {
-        this.dataCard.push({
-          index: index,
-          text: "awdawdss",
-        });
-        console.log(this.dataCard[index], "this.dataCard[index]");
-      }
-    },
+    initialPage() {},
     async handleStartCountdown() {
       if (!this.isCountdown) {
         this.isCountdown = true;
@@ -170,6 +167,9 @@ export default {
       this.setter.pomodoroMin = 0;
       this.setter.shortBreakMin = 0;
       this.setter.longBreakMin = 0;
+      this.pomodoro.sec = 0;
+      this.pomodoro.sec = 0;
+      this.pomodoro.sec = 0;
 
       console.log(this.settingShow, "this.settingShow");
       this.settingShow != this.settingShow;
@@ -197,8 +197,20 @@ export default {
     onCard(value) {
       this.text = value;
     },
-    onDelete(index) {
-      this.dataCard.splice(index, 1);
+    onDelete(uid) {
+      const newCardData = this.cardData.filter((data) => {
+        return data.uid !== uid;
+      });
+      this.cardData = newCardData;
+    },
+    handleAddCard(text) {
+      const newUid = uuid.v1();
+      this.cardData.push({
+        uid: newUid,
+        text: text,
+      });
+
+      console.log("text", this.text);
     },
     handleNextMin() {
       this.mode === "POMODORO"
