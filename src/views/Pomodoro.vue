@@ -1,6 +1,11 @@
 <template>
   <div class="main">
     <h1>Pomodoro</h1>
+    <section class="button-pomodoro">
+      <button @click="handleMode('POMODORO')">Pomodoro</button>
+      <button @click="handleMode('SHORT_BREAK')">Short break</button>
+      <button @click="handleMode('LONG_BREAK')">Long break</button>
+    </section>
     <section class="timer container">
       <div v-if="mode === 'POMODORO'">
         {{ isPoromodoMin }}:{{ isPoromodoSec }}
@@ -219,6 +224,16 @@ export default {
         : this.mode === "SHORT_BREAK"
         ? this.shortBreak.min++
         : this.longBreak.min++;
+    },
+    handleMode(mode) {
+      this.mode = mode;
+      if (mode === "POMODORO") {
+        this.handleStopCountdown();
+      } else if (mode === "SHORT_BREAK") {
+        this.handleStopCountdown();
+      } else if (mode === "LONG_BREAK") {
+        this.handleStopCountdown();
+      }
     },
   },
 };
