@@ -1,11 +1,15 @@
 <template>
-  <div class="main">
+  <div
+    :class="[
+      this.mode === 'POMODORO'
+        ? 'main background p'
+        : mode === 'SHORT_BREAK'
+        ? 'main background s'
+        : 'main background l',
+    ]"
+  >
     <h1>Pomodoro</h1>
-    <section class="button-pomodoro">
-      <button @click="handleMode('POMODORO')">Pomodoro</button>
-      <button @click="handleMode('SHORT_BREAK')">Short break</button>
-      <button @click="handleMode('LONG_BREAK')">Long break</button>
-    </section>
+    <section class="button-pomodoro"></section>
     <section class="timer container">
       <div v-if="mode === 'POMODORO'">
         {{ isPoromodoMin }}:{{ isPoromodoSec }}
@@ -16,7 +20,7 @@
       <div v-else-if="mode === 'LONG_BREAK'">
         {{ isLongBreakMin }}:{{ isLongBreakSec }}
       </div>
-      <button id="nextMin" @click="handleNextMin">></button>
+      <button id="nextMin" @click="handleNext">></button>
     </section>
     <section class="button-pomodoro">
       <button @click="handleStartCountdown">start</button>
@@ -110,7 +114,9 @@ export default {
         min: 0,
         sec: 3,
       },
-      isCountdown: false,
+      isCountdownPomodoro: false,
+      isCountdownShortBreak: false,
+      isCountdownLongBreak: false,
       mode: "POMODORO",
       text: "",
       cardData: [],
@@ -146,26 +152,76 @@ export default {
   methods: {
     initialPage() {},
     async handleStartCountdown() {
-      if (!this.isCountdown) {
-        this.isCountdown = true;
-        while (this.pomodoro.min >= 0 && this.isCountdown) {
-          while (this.pomodoro.sec > 0 && this.isCountdown) {
-            this.pomodoro.sec--;
-            console.log(this.pomodoro.sec, "sec");
-            console.log("this.isCountdown", this.isCountdown);
-            await this.sleep(1000);
+      if (this.mode === "POMODORO") {
+        if (!this.isCountdownPomodoro) {
+          this.isCountdownPomodoro = true;
+          while (this.pomodoro.min >= 0 && this.isCountdownPomodoro) {
+            while (this.pomodoro.sec > 0 && this.isCountdownPomodoro) {
+              this.pomodoro.sec--;
+              console.log(this.pomodoro.sec, "sec");
+              console.log("this.isCountdownPomodoro", this.isCountdownPomodoro);
+              await this.sleep(1000);
+            }
+            if (this.pomodoro.min > 0 && this.isCountdownPomodoro) {
+              this.pomodoro.min--;
+              this.pomodoro.sec = 60;
+            } else {
+              this.handleStopCountdown();
+            }
           }
-          if (this.pomodoro.min > 0 && this.isCountdown) {
-            this.pomodoro.min--;
-            this.pomodoro.sec = 60;
-          } else {
-            this.handleStopCountdown();
+        }
+      } else if (this.mode === "SHORT_BREAK") {
+        if (!this.isCountdownShortBreak) {
+          this.isCountdownShortBreak = true;
+          while (this.shortBreak.min >= 0 && this.isCountdownShortBreak) {
+            while (this.shortBreak.sec > 0 && this.isCountdownShortBreak) {
+              this.shortBreak.sec--;
+              console.log(this.shortBreak.sec, "sec");
+              console.log(
+                "this.isCountdownShortBreak",
+                this.isCountdownShortBreak
+              );
+              await this.sleep(1000);
+            }
+            if (this.shortBreak.min > 0 && this.isCountdownShortBreak) {
+              this.shortBreak.min--;
+              this.shortBreak.sec = 60;
+            } else {
+              this.handleStopCountdown();
+            }
+          }
+        }
+      } else if (this.mode === "LONG_BREAK") {
+        if (!this.isCountdownLongBreak) {
+          this.isCountdownLongBreak = true;
+          while (this.longBreak.min >= 0 && this.isCountdownLongBreak) {
+            while (this.longBreak.sec > 0 && this.isCountdownLongBreak) {
+              this.longBreak.sec--;
+              console.log(this.longBreak.sec, "sec");
+              console.log(
+                "this.isCountdownLongBreak",
+                this.isCountdownLongBreak
+              );
+              await this.sleep(1000);
+            }
+            if (this.longBreak.min > 0 && this.isCountdownLongBreak) {
+              this.longBreak.min--;
+              this.longBreak.sec = 60;
+            } else {
+              this.handleStopCountdown();
+            }
           }
         }
       }
     },
     handleStopCountdown() {
-      this.isCountdown = false;
+      if (this.mode === "POMODORO") {
+        this.isCountdownPomodoro = false;
+      } else if (this.mode === "SHORT_BREAK") {
+        this.isCountdownShortBreak = false;
+      } else if (this.mode === "LONG_BREAK") {
+        this.isCountdownLongBreak = false;
+      }
     },
     sleep(ms) {
       return new Promise((result) => setTimeout(result, ms));
@@ -218,22 +274,15 @@ export default {
 
       console.log("text", this.text);
     },
-    handleNextMin() {
-      this.mode === "POMODORO"
-        ? this.pomodoro.min++
-        : this.mode === "SHORT_BREAK"
-        ? this.shortBreak.min++
-        : this.longBreak.min++;
-    },
-    handleMode(mode) {
-      this.mode = mode;
-      if (mode === "POMODORO") {
-        this.handleStopCountdown();
-      } else if (mode === "SHORT_BREAK") {
-        this.handleStopCountdown();
-      } else if (mode === "LONG_BREAK") {
-        this.handleStopCountdown();
-      }
+    handleNext() {
+      this.handleStopCountdown();
+      this.mode =
+        this.mode === "POMODORO"
+          ? "SHORT_BREAK"
+          : this.mode === "SHORT_BREAK"
+          ? "LONG_BREAK"
+          : "POMODORO";
+      console.log("this.mode", this.mode);
     },
   },
 };
@@ -241,8 +290,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.main {
+.main.background.p {
   background: black;
+}
+.main.background.s {
+  background: pink;
+}
+.main.background.l {
+  background: green;
 }
 
 h1 {
