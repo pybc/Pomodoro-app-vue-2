@@ -64,6 +64,16 @@
           </b-col>
         </b-row>
         <b-row>
+          <b-col class="col-6">
+            <label for="secInput">Long Break</label>
+            <b-form-input
+              id="secInput"
+              v-model="delay.longBreak"
+              type="number"
+            ></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
           <b-col class="text-center">
             <button @click="setTime">ok</button>
           </b-col>
@@ -125,6 +135,9 @@ export default {
       mode: "POMODORO",
       text: "",
       cardData: [],
+      delay: {
+        longBreak: 1,
+      },
     };
   },
   props: {
@@ -177,6 +190,10 @@ export default {
                 this.cardData.splice(0, 1);
                 this.pomodoro.min = this.setter.pomodoroMin;
                 this.pomodoro.sec = 0;
+                this.delay.longBreak--;
+              }
+              if (this.delay.longBreak === 0) {
+                this.mode = "LONG_BREAK";
               }
             }
           }
