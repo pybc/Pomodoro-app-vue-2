@@ -23,8 +23,13 @@
       <button id="nextMin" @click="handleNext">></button>
     </section>
     <section class="button-pomodoro">
-      <button @click="handleStartCountdown">start</button>
-      <button @click="handleStopCountdown">stop</button>
+      <button
+        v-if="isCountdownPomodoro === false"
+        @click="handleStartCountdown"
+      >
+        start
+      </button>
+      <button v-else @click="handleStopCountdown">stop</button>
       <button @click="isSettingModal = !isSettingModal">Setting</button>
     </section>
     <section>
@@ -167,6 +172,12 @@ export default {
               this.pomodoro.sec = 60;
             } else {
               this.handleStopCountdown();
+              if (this.cardData.length > 0) {
+                // handle when end 1 est
+                this.cardData.splice(0, 1);
+                this.pomodoro.min = this.setter.pomodoroMin;
+                this.pomodoro.sec = 0;
+              }
             }
           }
         }
