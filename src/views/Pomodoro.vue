@@ -138,6 +138,8 @@ export default {
       delay: {
         longBreak: 1,
       },
+      isAutoStartPomodoro: false,
+      isAutoStartBreak: false,
     };
   },
   props: {
@@ -192,7 +194,7 @@ export default {
                 this.pomodoro.sec = 0;
                 this.delay.longBreak--;
               }
-              if (this.delay.longBreak === 0) {
+              if (this.delay.longBreak === 0 && this.isAutoStartPomodoro) {
                 this.mode = "LONG_BREAK";
               }
             }
