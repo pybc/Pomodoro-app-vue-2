@@ -9,3 +9,9 @@ export default new Vuex.Store({
   actions: {},
   modules: {},
 });
+const pomodoroModule = {
+  state: {},
+  mutations: {},
+  getter: {},
+  actions: {},
+};
