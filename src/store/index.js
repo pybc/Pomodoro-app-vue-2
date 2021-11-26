@@ -3,15 +3,18 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
-});
 const pomodoroModule = {
-  state: {},
+  state: {
+    startTime: null,
+  },
   mutations: {},
   getter: {},
   actions: {},
 };
+
+export default new Vuex.Store({
+  state: { pomodoroModule: pomodoroModule },
+  mutations: {},
+  actions: {},
+  modules: {},
+});
