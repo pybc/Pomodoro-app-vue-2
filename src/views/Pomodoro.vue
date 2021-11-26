@@ -8,6 +8,8 @@
           ? '#ffcc48'
           : '#40e080',
       ]"
+      :isOpen="isSettingModal"
+      @onSettingButton="showModalSetting"
     ></top-navbar>
     <div
       :class="[
@@ -28,19 +30,18 @@
         <span v-else-if="mode === 'LONG_BREAK'">
           {{ isLongBreakMin }}:{{ isLongBreakSec }}
         </span>
-        <button id="btnNextMin" @click="handleNext">
-          <ph-skip-forward :size="48" />
-        </button>
       </section>
 
-      <section class="button-pomodoro">
+      <section>
         <button
           v-if="isCountdownPomodoro === false"
           @click="handleStartCountdown"
+          class="button-start"
         >
           start
         </button>
         <button v-else @click="handleStopCountdown">stop</button>
+        <button @click="handleNext" class="button-stop">Done</button>
         <button @click="isSettingModal = !isSettingModal">Setting</button>
       </section>
       <section>
@@ -114,7 +115,7 @@ const REGEX_NUMBER = /^[0-9]*$/;
 import Card from "@/components/common/Card.vue";
 import CardInput from "@/components/common/CardInput.vue";
 import TopNavbar from "@/components/common/TopNavbar.vue";
-import { PhSkipForward } from "phosphor-vue";
+
 import { uuid } from "vue-uuid";
 
 export default {
@@ -123,7 +124,6 @@ export default {
     Card,
     CardInput,
     TopNavbar,
-    PhSkipForward,
   },
   data() {
     return {
@@ -272,13 +272,13 @@ export default {
     sleep(ms) {
       return new Promise((result) => setTimeout(result, ms));
     },
-    showModalSetting() {
+    showModalSetting(isOpen) {
       this.setter.pomodoroMin = 0;
       this.setter.shortBreakMin = 0;
       this.setter.longBreakMin = 0;
 
       console.log(this.isSettingModal, "this.settingShow");
-      this.isSettingModal != this.settinisSettingModalgShow;
+      this.isSettingModal = isOpen;
     },
     handleSettingMin(event, time) {
       if (!REGEX_NUMBER.test(time)) {
@@ -365,6 +365,26 @@ section {
   display: flex;
   justify-content: space-evenly;
 }
+
+.button-start {
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #42ee54;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5em 2em;
+}
+.button-stop {
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #494040;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5em 2em;
+}
+
 .button-pomodoro button {
   background: none;
   color: #ffa260;
