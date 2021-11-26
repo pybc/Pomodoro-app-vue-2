@@ -1,99 +1,111 @@
 <template>
-  <div
-    :class="[
-      this.mode === 'POMODORO'
-        ? 'main background p'
-        : mode === 'SHORT_BREAK'
-        ? 'main background s'
-        : 'main background l',
-    ]"
-  >
-    <h1>Pomodoro</h1>
-    <section class="button-pomodoro"></section>
-    <section class="timer container">
-      <div v-if="mode === 'POMODORO'">
-        {{ isPoromodoMin }}:{{ isPoromodoSec }}
-      </div>
-      <div v-else-if="mode === 'SHORT_BREAK'">
-        {{ isShortBreakMin }}:{{ isShortBreakSec }}
-      </div>
-      <div v-else-if="mode === 'LONG_BREAK'">
-        {{ isLongBreakMin }}:{{ isLongBreakSec }}
-      </div>
-      <button id="nextMin" @click="handleNext">></button>
-    </section>
-    <section class="button-pomodoro">
-      <button
-        v-if="isCountdownPomodoro === false"
-        @click="handleStartCountdown"
-      >
-        start
-      </button>
-      <button v-else @click="handleStopCountdown">stop</button>
-      <button @click="isSettingModal = !isSettingModal">Setting</button>
-    </section>
-    <section>
-      <b-modal v-model="isSettingModal" hide-footer class="px-1">
-        <b-row>
-          <b-col class="col-4">
-            <label for="minInput">Pomodoro</label>
-            <b-form-input
-              id="minInput"
-              v-model="setter.pomodoroMin"
-              type="number"
-              @keypress="handleSettingMin($event, setter.pomodoroMin)"
-            ></b-form-input>
-          </b-col>
-          <b-col class="col-4">
-            <label for="secInput">Short Break</label>
-            <b-form-input
-              id="secInput"
-              v-model="setter.shortBreakMin"
-              type="number"
-              @keypress="handleSettingMin($event, setter.shortBreakMin)"
-            ></b-form-input>
-          </b-col>
-          <b-col class="col-4">
-            <label for="secInput">Long Break</label>
-            <b-form-input
-              id="secInput"
-              v-model="setter.longBreakMin"
-              type="number"
-              @keypress="handleSettingMin($event, setter.longBreakMin)"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col class="col-6">
-            <label for="secInput">Long Break</label>
-            <b-form-input
-              id="secInput"
-              v-model="delay.longBreak"
-              type="number"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-center">
-            <button @click="setTime">ok</button>
-          </b-col>
-        </b-row>
-      </b-modal>
-    </section>
-    <section>
-      <h2>Todolist</h2>
-    </section>
-    <section class="list">
-      <card
-        v-for="data in cardData"
-        :key="data.uid"
-        :text="data.text"
-        :uid="data.uid"
-        @onDelete="onDelete"
-        @onClick="onCard"
-      ></card>
-      <card-input @onAddCard="handleAddCard"> </card-input>
-    </section>
+  <div>
+    <top-navbar
+      :background="[
+        this.mode === 'POMODORO'
+          ? '#ff4848'
+          : mode === 'SHORT_BREAK'
+          ? '#ffcc48'
+          : '#40e080',
+      ]"
+    ></top-navbar>
+    <div
+      :class="[
+        this.mode === 'POMODORO'
+          ? 'main background p'
+          : mode === 'SHORT_BREAK'
+          ? 'main background s'
+          : 'main background l',
+      ]"
+    >
+      <section class="timer">
+        <span v-if="mode === 'POMODORO'">
+          {{ isPoromodoMin }}:{{ isPoromodoSec }}
+        </span>
+        <span v-else-if="mode === 'SHORT_BREAK'">
+          {{ isShortBreakMin }}:{{ isShortBreakSec }}
+        </span>
+        <span v-else-if="mode === 'LONG_BREAK'">
+          {{ isLongBreakMin }}:{{ isLongBreakSec }}
+        </span>
+        <button id="btnNextMin" @click="handleNext">
+          <ph-skip-forward :size="48" />
+        </button>
+      </section>
+
+      <section class="button-pomodoro">
+        <button
+          v-if="isCountdownPomodoro === false"
+          @click="handleStartCountdown"
+        >
+          start
+        </button>
+        <button v-else @click="handleStopCountdown">stop</button>
+        <button @click="isSettingModal = !isSettingModal">Setting</button>
+      </section>
+      <section>
+        <b-modal v-model="isSettingModal" hide-footer class="px-1">
+          <b-row>
+            <b-col class="col-4">
+              <label for="minInput">Pomodoro</label>
+              <b-form-input
+                id="minInput"
+                v-model="setter.pomodoroMin"
+                type="number"
+                @keypress="handleSettingMin($event, setter.pomodoroMin)"
+              ></b-form-input>
+            </b-col>
+            <b-col class="col-4">
+              <label for="secInput">Short Break</label>
+              <b-form-input
+                id="secInput"
+                v-model="setter.shortBreakMin"
+                type="number"
+                @keypress="handleSettingMin($event, setter.shortBreakMin)"
+              ></b-form-input>
+            </b-col>
+            <b-col class="col-4">
+              <label for="secInput">Long Break</label>
+              <b-form-input
+                id="secInput"
+                v-model="setter.longBreakMin"
+                type="number"
+                @keypress="handleSettingMin($event, setter.longBreakMin)"
+              ></b-form-input>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col class="col-6">
+              <label for="secInput">Long Break</label>
+              <b-form-input
+                id="secInput"
+                v-model="delay.longBreak"
+                type="number"
+              ></b-form-input>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-center">
+              <button @click="setTime">ok</button>
+            </b-col>
+          </b-row>
+        </b-modal>
+      </section>
+      <section>
+        <h2>Todolist</h2>
+      </section>
+      <section class="list">
+        <card
+          v-for="data in cardData"
+          :key="data.uid"
+          :text="data.text"
+          :uid="data.uid"
+          @onDelete="onDelete"
+          @onClick="onCard"
+        ></card>
+        <card-input @onAddCard="handleAddCard"> </card-input>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -101,6 +113,8 @@
 const REGEX_NUMBER = /^[0-9]*$/;
 import Card from "@/components/common/Card.vue";
 import CardInput from "@/components/common/CardInput.vue";
+import TopNavbar from "@/components/common/TopNavbar.vue";
+import { PhSkipForward } from "phosphor-vue";
 import { uuid } from "vue-uuid";
 
 export default {
@@ -108,6 +122,8 @@ export default {
   components: {
     Card,
     CardInput,
+    TopNavbar,
+    PhSkipForward,
   },
   data() {
     return {
@@ -317,17 +333,19 @@ export default {
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+coped" attribute to limit CSS to this component only -->
 <style scoped>
+.main {
+  font-family: "Poppins", "roboto", "kanit";
+}
 .main.background.p {
-  background: black;
+  background: #ff4848;
 }
 .main.background.s {
-  background: pink;
+  background: #ffcc48;
 }
 .main.background.l {
-  background: green;
+  background: #40e080;
 }
 
 h1 {
@@ -336,9 +354,13 @@ h1 {
 }
 .timer {
   color: white;
-  font-size: 6em;
+  font-size: 80px;
+  font-weight: bold;
+  background-color: #ffffff20;
+  display: flex;
+  margin: 0 auto;
+  max-width: 30rem;
 }
-
 section {
   display: flex;
   justify-content: space-evenly;
@@ -373,6 +395,10 @@ section {
   width: 20em;
 }
 #btnNextMin {
-  height: 1em;
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 </style>
