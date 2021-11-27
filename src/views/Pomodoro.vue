@@ -34,15 +34,20 @@
 
       <section>
         <button
-          v-if="isCountdownPomodoro === false"
-          @click="handleStartCountdown"
-          class="button-start"
+          v-if="
+            isCountdownPomodoro === true ||
+            isCountdownShortBreak === true ||
+            isCountdownLongBreak === true
+          "
+          class="button-pause"
+          @click="handleStopCountdown"
         >
+          stop
+        </button>
+        <button v-else @click="handleStartCountdown" class="button-start">
           start
         </button>
-        <button v-else @click="handleStopCountdown">stop</button>
         <button @click="handleNext" class="button-stop">Done</button>
-        <button @click="isSettingModal = !isSettingModal">Setting</button>
       </section>
       <section>
         <b-modal v-model="isSettingModal" hide-footer class="px-1">
@@ -370,6 +375,15 @@ section {
   font-size: 1.1em;
   font-weight: bold;
   background-color: #42ee54;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5em 2em;
+}
+.button-pause {
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #ff9900;
   color: white;
   border: none;
   border-radius: 8px;
