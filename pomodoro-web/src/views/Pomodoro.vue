@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pomodoroApp">
     <top-navbar
       :background="[
         this.mode === 'POMODORO'
@@ -101,6 +101,7 @@
         <h2>Todolist</h2>
       </section>
       <section class="list">
+        <h4>in progress</h4>
         <card
           v-for="data in cardData"
           :key="data.uid"
@@ -108,6 +109,7 @@
           :uid="data.uid"
           @onDelete="onDelete"
           @onClick="onCard"
+          @onAddEst="onAddEst"
         ></card>
         <card-input @onAddCard="handleAddCard"> </card-input>
       </section>
@@ -316,6 +318,9 @@ export default {
       });
       this.cardData = newCardData;
     },
+    onAddEst(est) {
+      console.log(est);
+    },
     handleAddCard(text) {
       const newUid = uuid.v1();
       this.cardData.push({
@@ -340,6 +345,10 @@ export default {
 </script>
 coped" attribute to limit CSS to this component only -->
 <style scoped>
+.pomodoroApp {
+  margin: 0 auto;
+  max-width: 50%;
+}
 .main {
   font-family: "Poppins", "roboto", "kanit";
 }
@@ -352,7 +361,9 @@ coped" attribute to limit CSS to this component only -->
 .main.background.l {
   background: #40e080;
 }
-
+.list h4 {
+  text-align: left;
+}
 h1 {
   text-align: center;
   color: white;
@@ -434,5 +445,11 @@ section {
   color: white;
   margin-left: 0.2em;
   margin-right: 0.2em;
+}
+
+@media only screen and (max-width: 1024px) {
+  .pomodoroApp {
+    max-width: 100%;
+  }
 }
 </style>
