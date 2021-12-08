@@ -122,7 +122,7 @@ const REGEX_NUMBER = /^[0-9]*$/;
 import Card from "@/components/common/Card.vue";
 import CardInput from "@/components/common/CardInput.vue";
 import TopNavbar from "@/components/common/TopNavbar.vue";
-
+import Config from '@/config'
 import { uuid } from "vue-uuid";
 
 export default {
@@ -193,7 +193,11 @@ export default {
     this.initialPage();
   },
   methods: {
-    initialPage() {},
+    initialPage() {
+      if(Config.devTest){
+        this.init('liffid')
+      }
+    },
     async handleStartCountdown() {
       if (this.mode === "POMODORO") {
         if (!this.isCountdownPomodoro) {
