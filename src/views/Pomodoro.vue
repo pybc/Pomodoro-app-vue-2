@@ -189,13 +189,16 @@ export default {
       return this.displayTimeFormat(this.longBreak.sec);
     },
   },
-  created() {
-    this.initialPage();
+  async created() {
+    await this.initialPage();
   },
   methods: {
-    initialPage() {
+    async initialPage() {
       if(Config.devTest){
-        this.init('liffid')
+        console.log('Config.devTest', Config.devTest);
+        console.log('Config.line.liff.index', Config.line.liff.index);
+        console.log('process.env.LIFF_INDEX',process.env.LIFF_INDEX);
+        // await lineUtil.init(Config.line.liff.index)
       }
     },
     async handleStartCountdown() {
