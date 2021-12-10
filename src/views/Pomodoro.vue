@@ -107,6 +107,7 @@
           :key="data.uid"
           :text="data.text"
           :uid="data.uid"
+          :est="1"
           @onDelete="onDelete"
           @onClick="onCard"
           @onAddEst="onAddEst"

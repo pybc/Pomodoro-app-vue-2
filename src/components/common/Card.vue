@@ -1,25 +1,52 @@
 <template>
   <section id="text" class="d-flex flex-row">
+    <span>{{ est }}</span>
     <span v-if="isEdit === true">
       <input v-model="textCard" type="text" />
     </span>
     <span v-else>
       {{ textCard }}
     </span>
-    <span><button @click="handleDeleteButton">delete</button></span>
-    <span><button @click="handleEditButton">edit</button></span>
+    <section class="buttonCard">
+      <span v-if="isEdit === false">
+        <span
+          ><button id="addButton" @click="handleAddEstButton">
+            <ph-plus :size="48" class="iconCard" /></button
+        ></span>
+        <span
+          ><button id="editButton" @click="handleEditButton">
+            <ph-note-pencil :size="48" class="iconCard" /></button
+        ></span>
+        <span
+          ><button id="deleteButton" @click="handleDeleteButton">
+            <ph-trash :size="48" class="iconCard" /></button
+        ></span>
+      </span>
+      <span v-else>
+        <span
+          ><button id="confirmButton" @click="handleEditButton">
+            <ph-check :size="48" class="iconCard" /></button
+        ></span>
+      </span>
+    </section>
   </section>
 </template>
-
 <script>
+import { PhTrash, PhNotePencil, PhPlus, PhCheck } from "phosphor-vue";
 export default {
   name: "Card",
   data() {
     return {
       isEdit: false,
       textCard: "",
-      value: "",
+      est: "",
     };
+  },
+  components: {
+    PhTrash,
+    PhNotePencil,
+    PhPlus,
+    PhCheck,
   },
   props: ["text", "uid"],
   created() {
@@ -28,6 +55,9 @@ export default {
   methods: {
     initData() {
       this.textCard = this.text;
+    },
+    handleAddEstButton() {
+      this.$emit("onAddEst", this.uid);
     },
     handleDeleteButton() {
       this.$emit("onDelete", this.uid);
@@ -45,11 +75,32 @@ export default {
   font-size: 22px;
 }
 section #text {
-  background: whi;
+  /* background: white; */
   min-width: 100%;
   min-height: 5em;
   align-items: center;
   text-align: center;
   border-radius: 20px;
+}
+.buttonCard button {
+  border: none;
+  border-radius: 4px 4px 4px 4px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+#addButton {
+  background-color: #42ff00;
+}
+#editButton {
+  background-color: #ff9900;
+}
+#confirmButton {
+  background-color: #42ff00;
+}
+#deleteButton {
+  background-color: #ff0000;
+}
+.iconCard {
+  color: white;
 }
 </style>
