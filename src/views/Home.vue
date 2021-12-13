@@ -7,7 +7,7 @@
 <script>
 // @ is an alias to /src
 import Pomodoro from "@/components/common/Pomodoro.vue";
-
+import Config from "../config"
 export default {
   name: "Home",
   components: {
@@ -15,6 +15,7 @@ export default {
   },
    async created() {
     await this.fetchData()
+    console.log('Config.line.liffId',Config.line.liffId);
   },
   methods: {
     fetchData() {

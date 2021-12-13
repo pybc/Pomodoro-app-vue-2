@@ -199,6 +199,7 @@ export default {
         console.log('Config.devTest', Config.devTest);
         console.log('Config.line.liff.index', Config.line.liff.index);
         console.log('process.env.LIFF_INDEX',process.env.LIFF_INDEX);
+         console.log('Config.line.liffId',Config.line.liffId);
         // await lineUtil.init(Config.line.liff.index)
       }
     },
