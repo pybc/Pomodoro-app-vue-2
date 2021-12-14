@@ -19,4 +19,4 @@ new Vue({
     return h(App);
   },
 }).$mount("#app");
-require("dotenv").config({ path: "./.env.development" });
+require("dotenv").config({ path: "./.env.development" || "./.env.production" });
