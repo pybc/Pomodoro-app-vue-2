@@ -44,10 +44,10 @@
         >
           stop
         </button>
-        <button v-else @click="handleStartCountdown" class="button-start">
+        <button v-else @click="handleStartCountdown" class="button-start my-2">
           start
         </button>
-        <button @click="handleNext" class="button-stop">Done</button>
+        <button @click="handleNext" class="button-stop my-2">Done</button>
       </section>
       <section>
         <b-modal v-model="isSettingModal" hide-footer class="px-1">
@@ -101,7 +101,7 @@
         <h2>Todolist</h2>
       </section>
       <section class="list">
-        <h4>in progress</h4>
+        <h4 >In progress</h4>
         <card
           v-for="data in cardData"
           :key="data.uid"
@@ -331,11 +331,14 @@ export default {
       console.log(est);
     },
     handleAddCard(text) {
-      const newUid = uuid.v1();
+      if(text.length > 0){
+        const newUid = uuid.v1();
       this.cardData.push({
         uid: newUid,
         text: text,
       });
+      }
+      
 
       console.log("text", this.text);
     },

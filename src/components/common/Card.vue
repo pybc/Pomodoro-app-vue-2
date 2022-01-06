@@ -11,21 +11,21 @@
       <span v-if="isEdit === false">
         <span
           ><button id="addButton" @click="handleAddEstButton">
-            <ph-plus :size="48" class="iconCard" /></button
+            <ph-plus :size="20" class="iconCard" /></button
         ></span>
         <span
           ><button id="editButton" @click="handleEditButton">
-            <ph-note-pencil :size="48" class="iconCard" /></button
+            <ph-note-pencil :size="20" class="iconCard" /></button
         ></span>
         <span
           ><button id="deleteButton" @click="handleDeleteButton">
-            <ph-trash :size="48" class="iconCard" /></button
+            <ph-trash :size="20" class="iconCard" /></button
         ></span>
       </span>
       <span v-else>
         <span
           ><button id="confirmButton" @click="handleEditButton">
-            <ph-check :size="48" class="iconCard" /></button
+            <ph-check :size="20" class="iconCard" /></button
         ></span>
       </span>
     </section>
@@ -77,11 +77,16 @@ export default {
 section #text {
   /* background: white; */
   min-width: 100%;
-  min-height: 5em;
+  min-height: 4em;
   align-items: center;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 8px;
+  background-color: whitesmoke;
+  box-shadow: 0px 0.5px;
+  margin: 5px 0px 5px 0px;
+
 }
+
 .buttonCard button {
   border: none;
   border-radius: 4px 4px 4px 4px;
